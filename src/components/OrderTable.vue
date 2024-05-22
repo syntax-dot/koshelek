@@ -18,7 +18,6 @@
       <tr
         v-for="(order, index) in orders"
         :key="index"
-        class="table_row"
       >
         <td>
           {{ order[0] }}
