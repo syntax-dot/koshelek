@@ -27,7 +27,9 @@
 
 
     <v-main>
-      <router-view/>
+      <div class="pa-md-4">
+        <router-view/>
+      </div>
     </v-main>
 
     <AppFooter/>

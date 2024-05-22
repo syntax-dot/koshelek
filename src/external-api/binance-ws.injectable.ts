@@ -10,7 +10,7 @@ export const binanceWsInjectable = createInjectable(() => {
     url: WS_BASE_URL
   });
 
-  function subscribe(symbols: string[]) {
+  function subscribeForSymbols(symbols: string[]) {
 
     return binance$.multiplex(
       () => (
@@ -31,5 +31,6 @@ export const binanceWsInjectable = createInjectable(() => {
     )
   }
 
-  return {binance$, subscribe}
+
+  return {binance$, subscribeForSymbols}
 })
