@@ -6,6 +6,7 @@ import Layouts from 'vite-plugin-vue-layouts'
 import Vue from '@vitejs/plugin-vue'
 import VueRouter from 'unplugin-vue-router/vite'
 import Vuetify, {transformAssetUrls} from 'vite-plugin-vuetify'
+import mkcert from 'vite-plugin-mkcert'
 
 // Utilities
 import {defineConfig} from 'vite'
@@ -15,14 +16,14 @@ import {fileURLToPath, URL} from 'node:url'
 export default defineConfig({
     devServer: {
         proxy: {
-            '/api*': {
+            '/api.binance.com': {
                 target: 'https://api.binance.com',
                 changeOrigin: true,
-                secure: false,
             },
         }
     },
     plugins: [
+        mkcert(),
         VueRouter({
             dts: 'src/typed-router.d.ts',
         }),
@@ -62,7 +63,7 @@ export default defineConfig({
             },
         }),
     ],
-    define: {'process.env': {}},
+    define: {'process.env': {...process.env}},
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -78,6 +79,7 @@ export default defineConfig({
         ],
     },
     server: {
+        https: true,
         port: 3000,
     },
 })

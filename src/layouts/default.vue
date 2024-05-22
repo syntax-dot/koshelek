@@ -37,7 +37,7 @@
 <script lang="ts" setup>
 import {onMounted, ref} from "vue";
 import {useRouter} from "vue-router";
-import {Spot} from '@binance/connector-typescript';
+import {RestMarketTypes, Spot} from '@binance/connector-typescript';
 
 const drawer = ref(false)
 const router = useRouter()
@@ -49,11 +49,25 @@ const items = [
 const BASE_URL = 'https://api.binance.com';
 
 onMounted(async () => {
-  const client = new Spot(process.env.API_KEY, process.env.API_SECRET, {baseURL: BASE_URL});
+  const client = new Spot(import.meta.env.VITE_API_KEY, import.meta.env.VITE_API_SECRET, {
+    baseURL: BASE_URL,
+    httpsAgent: false,
+  });
+
   client.exchangeInformation().then((res) => {
     console.log(res);
   }).catch(err => {
     console.log(err)
+  });
+
+  const options: RestMarketTypes.orderBookOptions = {
+    limit: 100,
+  };
+
+  client.orderBook('BNBUSDT', options).then((res: RestMarketTypes.orderBookResponse) => {
+    console.log(res);
+  }).catch(err => {
+    console.log(err);
   });
 })
 
