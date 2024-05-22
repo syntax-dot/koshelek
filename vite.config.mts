@@ -7,21 +7,11 @@ import Vue from '@vitejs/plugin-vue'
 import VueRouter from 'unplugin-vue-router/vite'
 import Vuetify, {transformAssetUrls} from 'vite-plugin-vuetify'
 import mkcert from 'vite-plugin-mkcert'
-
-// Utilities
 import {defineConfig} from 'vite'
 import {fileURLToPath, URL} from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    devServer: {
-        proxy: {
-            '/api.binance.com': {
-                target: 'https://api.binance.com',
-                changeOrigin: true,
-            },
-        }
-    },
     plugins: [
         mkcert(),
         VueRouter({
@@ -79,6 +69,13 @@ export default defineConfig({
         ],
     },
     server: {
+        proxy: {
+            '/binance': {
+                target: 'https://api.binance.com',
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/binance/, ''),
+            },
+        },
         https: true,
         port: 3000,
     },
