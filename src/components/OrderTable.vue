@@ -4,6 +4,7 @@
       height="300px"
       fixed-header
       class="table"
+      density="compact"
     >
       <thead>
       <tr>
@@ -15,17 +16,18 @@
       </thead>
       <tbody>
       <tr
-        v-for="item in orders"
-        :key="item.name"
+        v-for="(order, index) in orders"
+        :key="index"
+        class="table_row"
       >
         <td>
-          {{ item[0] }}
+          {{ order[0] }}
         </td>
         <td>
-          {{ item[1] }}
+          {{ order[1] }}
         </td>
         <td v-if="!mobile">
-          {{ getTotal(item[0], item[1]) }}
+          {{ getTotal(order[0], order[1]) }}
         </td>
         <!--        <template v-for="(field, index) in fields" :key="field + index">-->
         <!--          <template v-if="item.hasOwnProperty(field)">-->
@@ -67,6 +69,10 @@ function getTotal(price: string, amount: string) {
   border-radius: 16px
 
   &_head
+    display: grid
+    grid-auto-flow: column
+
+  &_row
     display: grid
     grid-auto-flow: column
 </style>
