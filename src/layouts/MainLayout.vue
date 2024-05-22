@@ -13,10 +13,10 @@
       >
         <v-list-item
           class="cursor-pointer"
-          v-for="item in items"
+          v-for="item in navItems"
           :key="item.path"
           :title="item.title"
-          @click="$router.push({ path: item.path })"
+          @click="router.push({ path: item.path })"
         >
           <template #prepend>
             <v-icon :icon="item.icon"/>
@@ -42,9 +42,9 @@ import {webSocket} from "rxjs/webSocket";
 
 const drawer = ref(false)
 const router = useRouter()
-const items = [
-  {title: 'Settings', path: '/settings', icon: ' mdi-cog-outline'},
-  {title: 'Order Book', path: '/orderBook', icon: 'mdi-book-arrow-up-outline'},
+const navItems = [
+  {title: 'Settings', path: '/settings', routeName: 'Settings', icon: ' mdi-cog-outline'},
+  {title: 'Order Book', path: '/orderBook', routeName: 'OrderBook', icon: 'mdi-book-arrow-up-outline'},
 ]
 
 const BASE_URL = '/binance';

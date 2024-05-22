@@ -1,16 +1,13 @@
 import {createInjectable} from "../utils/composition/create-injectable";
 import {webSocket} from "rxjs/webSocket";
 
-const BASE_URL = '/binance';
-
+const WS_BASE_URL = 'wss://fstream.binance.com/ws/stream';
 
 export const binanceWsInjectable = createInjectable(() => {
   let reqID = 0
 
   const binance$ = webSocket({
-    url: 'wss://fstream.binance.com/ws/stream',
-    // serializer: (value) => JSON.stringify(value),
-    // deserializer: (value) => JSON.parse(value.data),
+    url: WS_BASE_URL
   });
 
   function subscribe(symbols: string[]) {
