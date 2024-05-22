@@ -46,12 +46,10 @@ const items = [
   {title: 'Order Book', path: '/orderBook', icon: 'mdi-book-arrow-up-outline'},
 ]
 
-const API_KEY = '';
-const API_SECRET = '';
-const BASE_URL = 'https://testnet.binance.vision';
+const BASE_URL = 'https://api.binance.com';
 
 onMounted(async () => {
-  const client = new Spot(API_KEY, API_SECRET, {baseURL: BASE_URL});
+  const client = new Spot(process.env.API_KEY, process.env.API_SECRET, {baseURL: BASE_URL});
   client.exchangeInformation().then((res) => {
     console.log(res);
   }).catch(err => {
