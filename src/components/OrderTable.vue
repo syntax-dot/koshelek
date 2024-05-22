@@ -3,6 +3,7 @@
     <v-table
       height="300px"
       fixed-header
+      class="table"
     >
       <thead>
       <tr>
@@ -58,5 +59,10 @@ function getTotal(price: string, amount: string) {
 
 
 <style scoped lang="sass">
+.table
+  border-radius: 16px
 
+  &_head
+    display: grid
+    grid-auto-flow: column
 </style>
