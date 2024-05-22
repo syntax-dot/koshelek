@@ -7,7 +7,8 @@
     >
       <thead>
       <tr>
-        <th v-for="(column, index) in columns" :key="column + index" class="text-left">
+        <th v-for="(column, index) in columns.slice(0, !mobile ? columns.length : 2)" :key="column + index"
+            class="text-left">
           {{ column }}
         </th>
       </tr>
@@ -23,7 +24,7 @@
         <td>
           {{ item[1] }}
         </td>
-        <td>
+        <td v-if="!mobile">
           {{ getTotal(item[0], item[1]) }}
         </td>
         <!--        <template v-for="(field, index) in fields" :key="field + index">-->
@@ -40,6 +41,9 @@
 </template>
 <script setup lang="ts">
 import {round} from "lodash";
+import {useDisplay} from 'vuetify'
+
+const {mobile} = useDisplay()
 
 type Order = any
 
