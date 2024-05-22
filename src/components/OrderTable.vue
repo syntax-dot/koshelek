@@ -6,47 +6,53 @@
     >
       <thead>
       <tr>
-        <th class="text-left">
-          Name
-        </th>
-        <th class="text-left">
-          Calories
-        </th>
-        <th class="text-left">
-          Calories
+        <th v-for="(column, index) in columns" :key="column + index" class="text-left">
+          {{ column }}
         </th>
       </tr>
       </thead>
       <tbody>
       <tr
-        v-for="item in desserts"
+        v-for="item in orders"
         :key="item.name"
       >
-        <td>{{ item.name }}</td>
-        <td>{{ item.calories }}</td>
-        <td>{{ item.calories }}</td>
+        <td>
+          {{ item[0] }}
+        </td>
+        <td>
+          {{ item[1] }}
+        </td>
+        <td>
+          {{ getTotal(item[0], item[1]) }}
+        </td>
+        <!--        <template v-for="(field, index) in fields" :key="field + index">-->
+        <!--          <template v-if="item.hasOwnProperty(field)">-->
+        <!--            <td>-->
+        <!--              {{ item[field] }}-->
+        <!--            </td>-->
+        <!--          </template>-->
+        <!--        </template>-->
       </tr>
       </tbody>
     </v-table>
   </div>
 </template>
 <script setup lang="ts">
+import {round} from "lodash";
 
-interface OrderTableColumn {
-  head: string,
-  field: string
-}
-
-interface Order {
-  head: string,
-}
+type Order = any
 
 interface OrderTableProps {
-  columns: OrderTableColumn[]
-  order: Order[]
+  columns: string[],
+  // fields: string[],
+  orders: Order[]
 }
 
 const props = defineProps<OrderTableProps>()
+
+function getTotal(price: string, amount: string) {
+  return round(+price * +amount, 2)
+}
 
 </script>
 

@@ -35,7 +35,6 @@ const options: RestMarketTypes.orderBookOptions = {
 };
 
 function onUpdateSelectedSymbols(symbol: string) {
-  console.log('symbol', symbol)
   client.orderBook(symbol, options)
     .then((res: RestMarketTypes.orderBookResponse) => {
       console.log(res);
