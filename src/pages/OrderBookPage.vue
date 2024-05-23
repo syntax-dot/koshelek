@@ -3,7 +3,7 @@
     <v-select
       v-model="selectedLimit"
       variant="outlined"
-      label="Limit"
+      label="Items limit"
       :items="limitsOptions"
     />
     <v-select
@@ -30,7 +30,7 @@ import {useSelectedPair} from "../hooks/use-selected-pair";
 const limitsOptions = [100, 500, 1000]
 const priceDifferenceOptions = [0.01, 0.1, 1, 10, 100]
 const selectedLimit = ref(100)
-const selectedPriceDifference = ref(0.01)
+const selectedPriceDifference = ref<number | null>(null)
 
 const selectedPair = useSelectedPair()
 
@@ -47,6 +47,7 @@ const bidOrders = useGroupedItems(orderBook.bidOrders, selectedPriceDifference)
 
 <style scoped lang="sass">
 .order_wrapper
+  min-height: 400px
   display: grid
   grid-template-columns: 1fr 1fr
   gap: 16px

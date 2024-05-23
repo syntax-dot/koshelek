@@ -23,9 +23,9 @@
           <div>
             {{ order[1] }}
           </div>
-          <!--          <div v-if="!mobile">-->
-          <!--            {{ getTotal(order[0], order[1]) }}-->
-          <!--          </div>-->
+          <div v-if="!mobile">
+            {{ getTotal(order[0], order[1]) }}
+          </div>
         </div>
       </div>
     </div>
@@ -47,8 +47,8 @@ interface OrderTableProps {
 
 const props = defineProps<OrderTableProps>()
 
-function getTotal(price: string, amount: string) {
-  return round(+price * +amount, 2)
+function getTotal(price: number, amount: number) {
+  return round(price * amount, 2)
 }
 
 </script>
