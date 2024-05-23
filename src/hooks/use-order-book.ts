@@ -1,20 +1,7 @@
 import {binanceWsInjectable} from "../external-api/binance-ws.injectable";
 import {onUnmounted, Ref, ref, watch} from "vue";
 import {Subscription} from "rxjs";
-
-export interface OrderItem {
-  E: number
-  T: number
-  U: number
-  a: [string, string][]
-  b: [string, string][]
-  e: string
-  pu: number
-  s: string
-  u: number
-}
-
-type Order = [number, number]
+import {Order, OrderItem} from "../types";
 
 function isOrderItem(arg: any): arg is OrderItem {
   return !!arg

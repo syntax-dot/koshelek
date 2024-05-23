@@ -1,12 +1,7 @@
 import {ref} from "vue";
+import {LogTransaction} from "../types";
 
 const dbName = "logs_db";
-
-export interface LogTransaction {
-  timestamp: number;
-  oldValue: string;
-  newValue: string;
-}
 
 const dbSchema = [
   {name: 'oldValue', keyPath: 'oldValue'},

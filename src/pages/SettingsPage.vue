@@ -28,9 +28,10 @@
 
 <script setup lang="ts">
 import {useSelectedPair} from "../hooks/use-selected-pair";
-import {LogTransaction, useIndexedDb} from "../hooks/use-indexed-db";
+import {useIndexedDb} from "../hooks/use-indexed-db";
 import {onMounted, ref, watch} from "vue";
 import {formatTimestamp} from "../utils/date-time/format-timestamp";
+import {LogTransaction} from "../types";
 
 interface Symbol {
   title: string

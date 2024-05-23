@@ -5,7 +5,7 @@ export function useSelectedPair() {
     return {
       get() {
         track()
-        return localStorage.getItem('selectedPair');
+        return localStorage.getItem('selectedPair') ?? 'BTCUSDT';
       },
       set(value) {
         localStorage.setItem('selectedPair', value);
