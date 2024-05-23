@@ -2,7 +2,12 @@
   <v-app>
     <v-app-bar :elevation="2">
       <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"/>
-      <v-app-bar-title>Koshelek</v-app-bar-title>
+      <div class="d-flex align-center flex-row pl-6 cursor-pointer ga-4"
+           @click="router.push({name: 'Home'})"
+      >
+        <v-icon x-large icon="mdi-bitcoin"/>
+        <v-app-bar-title>Koshelek</v-app-bar-title>
+      </div>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -16,7 +21,7 @@
           v-for="item in navItems"
           :key="item.path"
           :title="item.title"
-          @click="router.push({ path: item.path })"
+          @click="router.push({ path: item.routeName })"
         >
           <template #prepend>
             <v-icon :icon="item.icon"/>
