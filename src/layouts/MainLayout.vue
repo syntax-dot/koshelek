@@ -27,7 +27,7 @@
 
 
     <v-main>
-      <div class="pa-md-4">
+      <div class="pa-4">
         <router-view/>
       </div>
     </v-main>
