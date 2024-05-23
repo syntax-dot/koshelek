@@ -21,7 +21,7 @@
           v-for="item in navItems"
           :key="item.path"
           :title="item.title"
-          @click="router.push({ path: item.routeName })"
+          @click="router.push({ name: item.routeName })"
         >
           <template #prepend>
             <v-icon :icon="item.icon"/>
