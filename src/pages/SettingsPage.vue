@@ -1,10 +1,7 @@
 <template>
   <div>
-    <v-select
+    <PairSelect
       v-model="selectedPair"
-      variant="outlined"
-      label="Symbols"
-      :items="symbols"
     />
 
     <div>
@@ -32,17 +29,6 @@ import {useIndexedDb} from "../hooks/use-indexed-db";
 import {onMounted, ref, watch} from "vue";
 import {formatTimestamp} from "../utils/date-time/format-timestamp";
 import {LogTransaction} from "../types";
-
-interface Symbol {
-  title: string
-  value: string
-}
-
-const symbols: Symbol[] = [
-  {title: 'BTC-USDT', value: 'BTCUSDT'},
-  {title: 'BNB-USDT', value: 'BNBUSDT'},
-  {title: 'ETH-BTC', value: 'ETHBTC'},
-]
 
 const selectedPair = useSelectedPair()
 const {getAll, addTransaction} = useIndexedDb()

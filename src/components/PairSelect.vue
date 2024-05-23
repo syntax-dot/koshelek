@@ -1,6 +1,7 @@
 <template>
   <v-select
-    v-model="selectedPair"
+    :modelValue="modelValue"
+    @update:model-value="(value) => emit('update:modelValue', value)"
     variant="outlined"
     label="Symbols"
     :items="symbols"
@@ -9,14 +10,12 @@
 </template>
 
 <script setup lang="ts">
-interface Symbol {
-  title: string
-  value: string
-}
-
-const symbols: Symbol[] = [
+const symbols = [
   {title: 'BTC-USDT', value: 'BTCUSDT'},
   {title: 'BNB-USDT', value: 'BNBUSDT'},
   {title: 'ETH-BTC', value: 'ETHBTC'},
 ]
+
+defineProps<{ modelValue: string }>()
+const emit = defineEmits<{ (emit: 'update:modelValue', value: string): void }>()
 </script>

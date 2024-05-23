@@ -61,7 +61,7 @@ function getTotal(price: number, amount: number) {
 .table
   height: 100%
   overflow-y: auto
-  overflow-x: hidden !important
+  overflow-x: hidden
   color: #ADB2BB
 
   &::-webkit-scrollbar
@@ -72,9 +72,13 @@ function getTotal(price: number, amount: number) {
     border-radius: 16px
 
   &_wrapper
-    max-height: 80vh
+    max-height: 78vh
     border: 1px #ccc solid
     background-color: #161A1E
+
+    @media (max-width: 1280px)
+      max-height: 59vh
+
 
   &_grid
     display: grid
