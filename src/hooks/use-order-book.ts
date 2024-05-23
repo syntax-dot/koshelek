@@ -1,5 +1,6 @@
 import {binanceWsInjectable} from "../external-api/binance-ws.injectable";
-import {onUnmounted, Ref, ref} from "vue";
+import {onUnmounted, Ref, ref, watch} from "vue";
+import {Subscription} from "rxjs";
 
 export interface OrderItem {
   E: number
@@ -28,20 +29,23 @@ export function useOrderBook(symbols: Readonly<Ref<string[]>>) {
 
   const {subscribeForSymbols} = binanceWsInjectable.inject()
 
-  const pair$ = subscribeForSymbols(symbols.value)
+  let subscription: Subscription | null = null
 
-  const sub = pair$.subscribe((msg) => {
-    if (!isOrderItem(msg)) return
+  watch(symbols, (value, oldValue) => {
+    if (subscription) subscription.unsubscribe()
 
-    askOrders.value = msg.a.map(it => it.map(parseFloat) as Order)
-    bidOrders.value = msg.b.map(it => it.map(parseFloat) as Order)
-  })
+    const pair$ = subscribeForSymbols(value)
 
-  // watch(symbols, (value, oldValue) => {
-  //
-  // }, {immediate: true})
+    subscription = pair$.subscribe((msg) => {
+      if (!isOrderItem(msg)) return
 
-  onUnmounted(() => sub.unsubscribe())
+      askOrders.value = msg.a.map(it => it.map(parseFloat) as Order)
+      bidOrders.value = msg.b.map(it => it.map(parseFloat) as Order)
+    })
+
+  }, {immediate: true})
+
+  onUnmounted(() => subscription.unsubscribe())
 
   return {askOrders, bidOrders}
 }
