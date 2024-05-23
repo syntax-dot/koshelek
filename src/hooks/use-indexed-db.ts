@@ -37,10 +37,13 @@ export function useIndexedDb() {
   };
 
   const addTransaction = (transaction: LogTransaction) => {
-    console.log('db', db.value)
-    if (!db.value) return;
+    if (!db.value) {
+      throw new Error('db does not exist');
+    }
 
-    if (!db.value.objectStoreNames.contains(dbName)) return
+    if (!db.value.objectStoreNames.contains(dbName)) {
+      throw new Error(`objectStoreNames does not contains ${dbName}`)
+    }
 
     const transactionStore = db.value.transaction([dbName], "readwrite").objectStore(dbName);
     transactionStore.add(transaction);

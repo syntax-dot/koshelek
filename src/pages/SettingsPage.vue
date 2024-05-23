@@ -54,7 +54,12 @@ watch(selectedPair, (newValue, oldValue) => {
     newValue,
     oldValue
   }
-  addTransaction(changeLog)
+  try {
+    addTransaction(changeLog)
+    userLogs.value.push(changeLog)
+  } catch (error) {
+    console.error('addTransaction error', error)
+  }
 })
 
 onMounted(async () => {
