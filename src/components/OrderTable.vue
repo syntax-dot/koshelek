@@ -23,9 +23,9 @@
           <div>
             {{ order[1] }}
           </div>
-          <div v-if="!mobile">
-            {{ getTotal(order[0], order[1]) }}
-          </div>
+          <!--          <div v-if="!mobile">-->
+          <!--            {{ getTotal(order[0], order[1]) }}-->
+          <!--          </div>-->
         </div>
       </div>
     </div>
