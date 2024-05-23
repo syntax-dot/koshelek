@@ -1,7 +1,5 @@
 <template>
-  <div>
-    Home
-  </div>
+  <HelloWorld/>
 </template>
 
 <script setup lang="ts">
