@@ -26,9 +26,10 @@ import {useOrderBook} from "../hooks/use-order-book";
 import {useGroupedItems} from "../hooks/use-grouped-items";
 import {useSelectedPair} from "../hooks/use-selected-pair";
 
-
+const columns = ['Price', 'Quantity', 'Total']
 const limitsOptions = [100, 500, 1000]
 const priceDifferenceOptions = [0.01, 0.1, 1, 10, 100]
+
 const selectedLimit = ref(100)
 const selectedPriceDifference = ref<number | null>(null)
 
@@ -37,8 +38,6 @@ const selectedPair = useSelectedPair()
 const selectedPairValue = computed(() => {
   return [selectedPair.value.toLowerCase().concat('@depth')]
 })
-
-const columns = ['Price', 'Quantity', 'Total']
 
 const orderBook = useOrderBook(selectedPairValue)
 const askOrders = useGroupedItems(orderBook.askOrders, selectedPriceDifference)
