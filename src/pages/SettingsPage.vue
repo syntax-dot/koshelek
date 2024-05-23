@@ -5,7 +5,7 @@
       variant="outlined"
       label="Symbols"
       :items="symbols"
-    ></v-select>
+    />
 
     <div>
       USER LOGS

@@ -4,13 +4,14 @@
       v-model="selectedLimit"
       variant="outlined"
       label="Limit"
-      :items="limits"
+      :items="limitsOptions"
     />
     <v-select
-      v-model="selectedRound"
+      v-model="selectedPriceDifference"
       variant="outlined"
-      label="Group by"
-      :items="roundList"
+      clearable
+      label="Price difference"
+      :items="priceDifferenceOptions"
     />
     <div class="order_wrapper" v-if="askOrders">
       <OrderTable :columns="columns" :orders="askOrders" color="#CA374E"/>
@@ -26,11 +27,10 @@ import {useGroupedItems} from "../hooks/use-grouped-items";
 import {useSelectedPair} from "../hooks/use-selected-pair";
 
 
-const limits = [100, 500, 1000]
-const roundList = [100, 500, 1000]
+const limitsOptions = [100, 500, 1000]
+const priceDifferenceOptions = [0.01, 0.1, 1, 10, 100]
 const selectedLimit = ref(100)
-const symbols = ref(['btcusdt@depth'])
-const selectedRound = ref(1)
+const selectedPriceDifference = ref(0.01)
 
 const selectedPair = useSelectedPair()
 
@@ -41,8 +41,8 @@ const selectedPairValue = computed(() => {
 const columns = ['Price', 'Quantity', 'Total']
 
 const orderBook = useOrderBook(selectedPairValue)
-const askOrders = useGroupedItems(orderBook.askOrders, selectedRound)
-const bidOrders = useGroupedItems(orderBook.bidOrders, selectedRound)
+const askOrders = useGroupedItems(orderBook.askOrders, selectedPriceDifference)
+const bidOrders = useGroupedItems(orderBook.bidOrders, selectedPriceDifference)
 </script>
 
 <style scoped lang="sass">
