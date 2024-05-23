@@ -17,7 +17,7 @@
           class="table_grid"
           :key="index"
         >
-          <div>
+          <div :style="{color}">
             {{ order[0] }}
           </div>
           <div>
@@ -41,7 +41,8 @@ type Order = any
 
 interface OrderTableProps {
   columns: string[],
-  orders: Order[]
+  orders: Order[],
+  color?: string,
 }
 
 const props = defineProps<OrderTableProps>()
@@ -55,21 +56,31 @@ function getTotal(price: string, amount: string) {
 
 <style scoped lang="sass">
 .table
-  border-radius: 16px
   height: 100%
-  overflow-y: scroll
-  padding: 0 8px
+  overflow-y: auto
+  overflow-x: hidden !important
+  color: #ADB2BB
+
+  &::-webkit-scrollbar
+    width: 4px
+
+  &::-webkit-scrollbar-thumb
+    background: white
+    border-radius: 16px
 
   &_wrapper
     max-height: 80vh
+    border: 1px #ccc solid
+    background-color: #161A1E
 
   &_grid
     display: grid
     grid-template-columns: repeat(3, 1fr)
+    padding: 0 8px
 
   &_head__wrapper
-    border-bottom: 1px solid red
+    border-bottom: #ededed 1px solid
     position: sticky
     top: 0
-    background-color: red
+    background-color: #161A1E
 </style>

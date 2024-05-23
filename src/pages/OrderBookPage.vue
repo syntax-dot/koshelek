@@ -7,8 +7,8 @@
       :items="limits"
     />
     <div class="order_wrapper" v-if="askOrders">
-      <OrderTable :columns="columns" :orders="askOrders"/>
-      <OrderTable :columns="columns" :orders="bidOrders"/>
+      <OrderTable :columns="columns" :orders="askOrders" color="#CA374E"/>
+      <OrderTable :columns="columns" :orders="bidOrders" color="#2EBD85"/>
     </div>
   </div>
 </template>
