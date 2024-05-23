@@ -17,10 +17,10 @@ const dbSchema = [
 export function useIndexedDb() {
   const db = ref<IDBDatabase | null>(null);
 
-  const getAll = () => {
-    return new Promise<LogTransaction[]>((resolve, reject) => {
-      if (!db.value) return
+  const getAll = async () => {
+    if (!db.value) db.value = await initDb()
 
+    return new Promise<LogTransaction[]>((resolve, reject) => {
       const transaction = db.value.transaction([dbName], "readonly");
       const objectStore = transaction.objectStore(dbName);
       const getAllRequest = objectStore.getAll();
@@ -43,38 +43,41 @@ export function useIndexedDb() {
     if (!db.value.objectStoreNames.contains(dbName)) return
 
     const transactionStore = db.value.transaction([dbName], "readwrite").objectStore(dbName);
-    console.log('transactionStore', transactionStore)
     transactionStore.add(transaction);
   };
 
   const initDb = () => {
-    const logsDbRequest = indexedDB.open(dbName);
+    return new Promise<IDBDatabase>((resolve, reject) => {
+      const logsDbRequest = indexedDB.open(dbName);
 
-    logsDbRequest.onupgradeneeded = (event) => {
-      const database = logsDbRequest.result;
-      if (!database.objectStoreNames.contains(dbName)) {
-        const objectStore = database.createObjectStore(dbName, {keyPath: 'timestamp', autoIncrement: true});
-        dbSchema.forEach(({name, keyPath, unique}) => {
-          objectStore.createIndex(name, keyPath, {unique: unique ?? false});
-        })
-      }
-    };
-
-    logsDbRequest.onsuccess = () => {
-      const database = logsDbRequest.result;
-      db.value = database;
-
-      database.onversionchange = async () => {
-        database.close();
-        alert("База данных устарела, пожалуйста, перезагрузите страницу.");
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        window.location.reload();
+      logsDbRequest.onupgradeneeded = (event) => {
+        const database = logsDbRequest.result;
+        if (!database.objectStoreNames.contains(dbName)) {
+          const objectStore = database.createObjectStore(dbName, {keyPath: 'timestamp', autoIncrement: true});
+          dbSchema.forEach(({name, keyPath, unique}) => {
+            objectStore.createIndex(name, keyPath, {unique: unique ?? false});
+          })
+        }
       };
-    };
 
-    logsDbRequest.onerror = (error) => {
-      console.error("IndexedDb Error", error);
-    };
+      logsDbRequest.onsuccess = () => {
+        const database = logsDbRequest.result;
+        db.value = database;
+
+        resolve(database)
+
+        database.onversionchange = async () => {
+          database.close();
+          alert("База данных устарела, пожалуйста, перезагрузите страницу.");
+          await new Promise(resolve => setTimeout(resolve, 3000));
+          window.location.reload();
+        };
+      };
+
+      logsDbRequest.onerror = (error) => {
+        console.error(error);
+      };
+    })
   };
 
   initDb();
