@@ -17,9 +17,7 @@ export function useSelectedPair() {
           oldValue: localStorage.getItem('selectedPair')
         }
         addTransaction(changeLog)
-        
         localStorage.setItem('selectedPair', value);
-
         trigger()
       }
     }

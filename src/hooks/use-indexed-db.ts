@@ -8,15 +8,39 @@ export interface LogTransaction {
   newValue: string;
 }
 
+const dbSchema = [
+  {name: 'oldValue', keyPath: 'oldValue'},
+  {name: 'newValue', keyPath: 'newValue'},
+  {name: 'timestamp', keyPath: 'timestamp', unique: true},
+]
+
 export function useIndexedDb() {
   const db = ref<IDBDatabase | null>(null);
 
+  const getAll = () => {
+    return new Promise<LogTransaction[]>((resolve, reject) => {
+      if (!db.value) return
+
+      const transaction = db.value.transaction([dbName], "readonly");
+      const objectStore = transaction.objectStore(dbName);
+      const getAllRequest = objectStore.getAll();
+
+      getAllRequest.onsuccess = () => {
+        const transactions: LogTransaction[] = getAllRequest.result;
+        resolve(transactions);
+      };
+
+      getAllRequest.onerror = () => {
+        reject('Error fetching data from object store');
+      };
+    });
+  };
+
   const addTransaction = (transaction: LogTransaction) => {
     console.log('db', db.value)
-    if (!db.value) {
-      console.error('Database is not initialized');
-      return;
-    }
+    if (!db.value) return;
+
+    if (!db.value.objectStoreNames.contains(dbName)) return
 
     const transactionStore = db.value.transaction([dbName], "readwrite").objectStore(dbName);
     console.log('transactionStore', transactionStore)
@@ -29,19 +53,23 @@ export function useIndexedDb() {
     logsDbRequest.onupgradeneeded = (event) => {
       const database = logsDbRequest.result;
       if (!database.objectStoreNames.contains(dbName)) {
-        database.createObjectStore(dbName, {keyPath: 'timestamp', autoIncrement: true});
+        const objectStore = database.createObjectStore(dbName, {keyPath: 'timestamp', autoIncrement: true});
+        dbSchema.forEach(({name, keyPath, unique}) => {
+          objectStore.createIndex(name, keyPath, {unique: unique ?? false});
+        })
       }
     };
 
     logsDbRequest.onsuccess = () => {
       const database = logsDbRequest.result;
+      db.value = database;
+
       database.onversionchange = async () => {
         database.close();
         alert("База данных устарела, пожалуйста, перезагрузите страницу.");
         await new Promise(resolve => setTimeout(resolve, 3000));
         window.location.reload();
       };
-      db.value = database;
     };
 
     logsDbRequest.onerror = (error) => {
@@ -51,5 +79,5 @@ export function useIndexedDb() {
 
   initDb();
 
-  return {addTransaction}
+  return {addTransaction, getAll}
 }

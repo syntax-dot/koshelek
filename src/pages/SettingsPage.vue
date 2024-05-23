@@ -11,6 +11,7 @@
 
 <script setup lang="ts">
 import {useSelectedPair} from "../hooks/use-selected-pair";
+import {useIndexedDb} from "../hooks/use-indexed-db";
 
 interface Symbol {
   title: string
@@ -24,6 +25,8 @@ const symbols: Symbol[] = [
 ]
 
 const selectedPair = useSelectedPair()
+
+const {getAll} = useIndexedDb()
 
 </script>
 
