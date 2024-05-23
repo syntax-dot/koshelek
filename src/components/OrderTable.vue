@@ -1,43 +1,34 @@
 <template>
-  <div>
-    <v-table
-      height="300px"
-      fixed-header
+  <div class="table_wrapper">
+    <div
       class="table"
-      density="compact"
     >
-      <thead>
-      <tr>
-        <th v-for="(column, index) in columns.slice(0, !mobile ? columns.length : 2)" :key="column + index"
-            class="text-left">
+      <div class="table_grid table_head__wrapper">
+        <div v-for="(column, index) in columns.slice(0, !mobile ? columns.length : 2)"
+             :key="column + index"
+             class="text-left">
           {{ column }}
-        </th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr
-        v-for="(order, index) in orders"
-        :key="index"
-      >
-        <td>
-          {{ order[0] }}
-        </td>
-        <td>
-          {{ order[1] }}
-        </td>
-        <td v-if="!mobile">
-          {{ getTotal(order[0], order[1]) }}
-        </td>
-        <!--        <template v-for="(field, index) in fields" :key="field + index">-->
-        <!--          <template v-if="item.hasOwnProperty(field)">-->
-        <!--            <td>-->
-        <!--              {{ item[field] }}-->
-        <!--            </td>-->
-        <!--          </template>-->
-        <!--        </template>-->
-      </tr>
-      </tbody>
-    </v-table>
+        </div>
+      </div>
+
+      <div>
+        <div
+          v-for="(order, index) in orders"
+          class="table_grid"
+          :key="index"
+        >
+          <div>
+            {{ order[0] }}
+          </div>
+          <div>
+            {{ order[1] }}
+          </div>
+          <div v-if="!mobile">
+            {{ getTotal(order[0], order[1]) }}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -50,7 +41,6 @@ type Order = any
 
 interface OrderTableProps {
   columns: string[],
-  // fields: string[],
   orders: Order[]
 }
 
@@ -66,12 +56,20 @@ function getTotal(price: string, amount: string) {
 <style scoped lang="sass">
 .table
   border-radius: 16px
+  height: 100%
+  overflow-y: scroll
+  padding: 0 8px
 
-  &_head
-    display: grid
-    grid-auto-flow: column
+  &_wrapper
+    max-height: 80vh
 
-  &_row
+  &_grid
     display: grid
-    grid-auto-flow: column
+    grid-template-columns: repeat(3, 1fr)
+
+  &_head__wrapper
+    border-bottom: 1px solid red
+    position: sticky
+    top: 0
+    background-color: red
 </style>
