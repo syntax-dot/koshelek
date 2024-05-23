@@ -7,10 +7,19 @@
       :items="symbols"
     ></v-select>
 
-    <div class="logs_wrapper">
+    <div>
+      USER LOGS
+    </div>
+
+    <div class="log_list">
       <template v-if="userLogs.length">
-        <div v-for="log in userLogs" :key="log.timestamp">
-          {{ log }}
+        <div class="log_item" v-for="log in userLogs" :key="log.timestamp">
+          <div>
+            {{ formatTimestamp(log.timestamp) }}
+          </div>
+          <div>
+            {{ log.oldValue }} &#8658; {{ log.newValue }}
+          </div>
         </div>
       </template>
     </div>
@@ -21,6 +30,7 @@
 import {useSelectedPair} from "../hooks/use-selected-pair";
 import {LogTransaction, useIndexedDb} from "../hooks/use-indexed-db";
 import {onMounted, ref, watch} from "vue";
+import {formatTimestamp} from "../utils/date-time/format-timestamp";
 
 interface Symbol {
   title: string
@@ -48,12 +58,31 @@ watch(selectedPair, (newValue, oldValue) => {
 })
 
 onMounted(async () => {
-  const logs = await getAll()
-  console.log('logs', logs)
-  userLogs.value = logs
+  userLogs.value = await getAll()
 })
 </script>
 
 <style scoped lang="sass">
+.log
+  background-color: red
 
+  &_list
+    display: flex
+    flex-direction: column
+    gap: 8px
+    border: 1px #ccc solid
+    border-radius: 16px
+    padding: 8px
+    background-color: #161A1E
+
+  &_item
+    display: flex
+    flex-wrap: nowrap
+    gap: 8px
+    cursor: pointer
+    color: #ADB2BB
+    transition: color .3s ease-in-out
+
+    &:hover
+      color: white
 </style>
