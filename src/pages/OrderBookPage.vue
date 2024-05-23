@@ -20,20 +20,27 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {useOrderBook} from "../hooks/use-order-book";
 import {useGroupedItems} from "../hooks/use-grouped-items";
+import {useSelectedPair} from "../hooks/use-selected-pair";
 
 
 const limits = [100, 500, 1000]
 const roundList = [100, 500, 1000]
 const selectedLimit = ref(100)
 const symbols = ref(['btcusdt@depth'])
-const selectedRound = ref(100)
+const selectedRound = ref(1)
+
+const selectedPair = useSelectedPair()
+
+const selectedPairValue = computed(() => {
+  return [selectedPair.value.toLowerCase().concat('@depth')]
+})
 
 const columns = ['Price', 'Quantity', 'Total']
 
-const orderBook = useOrderBook(symbols)
+const orderBook = useOrderBook(selectedPairValue)
 const askOrders = useGroupedItems(orderBook.askOrders, selectedRound)
 const bidOrders = useGroupedItems(orderBook.bidOrders, selectedRound)
 </script>

@@ -1,22 +1,21 @@
 import {RouteRecordRaw} from "vue-router";
-import SettingsPage from "../pages/SettingsPage.vue";
-import OrderBookPage from "../pages/OrderBookPage.vue";
-import HomePage from "../pages/HomePage.vue";
+
+// TODO сделать обработку возможных ошибок при async import при дальнейших доработках
 
 export const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
-    component: HomePage,
+    component: () => import('../pages/HomePage.vue'),
   },
   {
     path: '/settings',
     name: 'Settings',
-    component: SettingsPage,
+    component: () => import('../pages/SettingsPage.vue'),
   },
   {
     path: '/orderBook',
     name: 'OrderBook',
-    component: OrderBookPage,
+    component: () => import('../pages/OrderBookPage.vue'),
   }
 ]

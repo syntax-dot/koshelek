@@ -1,8 +1,7 @@
 <template>
   <div>
     <v-select
-      v-model="selectedSymbol"
-      @update:model-value="onUpdateSelectedSymbols"
+      v-model="selectedPair"
       variant="outlined"
       label="Symbols"
       :items="symbols"
@@ -11,9 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
-import {binanceApiInjectable} from "../external-api/binance-api.injectable";
-import {RestMarketTypes} from "@binance/connector-typescript";
+import {useSelectedPair} from "../hooks/use-selected-pair";
 
 interface Symbol {
   title: string
@@ -22,26 +19,11 @@ interface Symbol {
 
 const symbols: Symbol[] = [
   {title: 'BTC-USDT', value: 'BTCUSDT'},
-  {title: 'BNB-BTC', value: 'BNBBTC'},
+  {title: 'BNB-USDT', value: 'BNBUSDT'},
   {title: 'ETH-BTC', value: 'ETHBTC'},
 ]
 
-const selectedSymbol = ref(symbols[0])
-
-const {client} = binanceApiInjectable.inject()
-
-const options: RestMarketTypes.orderBookOptions = {
-  limit: 100,
-};
-
-function onUpdateSelectedSymbols(symbol: string) {
-  client.orderBook(symbol, options)
-    .then((res: RestMarketTypes.orderBookResponse) => {
-      console.log(res);
-    }).catch(err => {
-    console.log(err);
-  });
-}
+const selectedPair = useSelectedPair()
 
 </script>
 
