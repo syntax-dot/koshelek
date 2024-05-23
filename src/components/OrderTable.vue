@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import {round} from "lodash";
 import {useDisplay} from 'vuetify'
+import {computed} from "vue";
 
 const {mobile} = useDisplay()
 
@@ -45,7 +46,9 @@ interface OrderTableProps {
   color?: string,
 }
 
-const props = defineProps<OrderTableProps>()
+defineProps<OrderTableProps>()
+
+const computedColumns = computed(() => mobile.value ? 2 : 3)
 
 function getTotal(price: number, amount: number) {
   return round(price * amount, 2)
@@ -75,7 +78,7 @@ function getTotal(price: number, amount: number) {
 
   &_grid
     display: grid
-    grid-template-columns: repeat(3, 1fr)
+    grid-template-columns: repeat(v-bind('computedColumns'), 1fr)
     padding: 0 8px
 
   &_head__wrapper
