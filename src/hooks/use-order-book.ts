@@ -4,6 +4,7 @@ import {Subscription} from "rxjs";
 import {Order, OrderItem} from "../types";
 import {RestMarketTypes} from "@binance/connector-typescript";
 import {binanceApiInjectable} from "../external-api/binance-api.injectable";
+import {AxiosResponse} from "axios";
 
 function isOrderItem(arg: any): arg is OrderItem {
   return !!arg
@@ -25,12 +26,15 @@ export function useOrderBook(symbols: Readonly<Ref<string[]>>, limit: Readonly<R
   watch(() => [symbols.value, limit.value], async () => {
     const formattedSymbol = symbols.value[0].split('@')[0].toUpperCase();
 
-    const options: RestMarketTypes.orderBookOptions = {
-      limit: limit.value,
-    };
-
     try {
-      const binanceApiRes = await client.orderBook(formattedSymbol, options)
+      // TODO not working in hosting
+      // const binanceApiRes = await client.orderBook(formattedSymbol, options)
+      const {data: binanceApiRes}: AxiosResponse<RestMarketTypes.orderBookResponse> = await client.get('depth', {
+        params: {
+          limit: limit.value,
+          symbol: formattedSymbol
+        }
+      })
 
       if (binanceApiRes.bids && binanceApiRes.asks) {
         askOrders.value = binanceApiRes.asks.map(it => it.map(parseFloat) as Order)
