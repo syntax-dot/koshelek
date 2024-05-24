@@ -69,13 +69,13 @@ export default defineConfig({
         ],
     },
     server: {
-        proxy: {
-            '/binance': {
-                target: 'https://api.binance.com',
-                changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/binance/, ''),
-            },
-        },
+        // proxy: {
+        //     '/binance': {
+        //         target: 'https://api.binance.com',
+        //         changeOrigin: true,
+        //         rewrite: (path) => path.replace(/^\/binance/, ''),
+        //     },
+        // },
         https: true,
         port: 3000,
     },
