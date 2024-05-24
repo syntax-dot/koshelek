@@ -12,10 +12,6 @@ function isOrderItem(arg: any): arg is OrderItem {
     && Array.isArray(arg.b)
 }
 
-const options: RestMarketTypes.orderBookOptions = {
-  limit: 100,
-};
-
 
 export function useOrderBook(symbols: Readonly<Ref<string[]>>, limit: Readonly<Ref<number>>) {
   const askOrders = ref<Order[]>([])
@@ -26,8 +22,12 @@ export function useOrderBook(symbols: Readonly<Ref<string[]>>, limit: Readonly<R
 
   let subscription: Subscription | null = null
 
-  watch(symbols, async (value, oldValue) => {
-    const formattedSymbol = value[0].split('@')[0].toUpperCase();
+  watch(() => [symbols.value, limit.value], async () => {
+    const formattedSymbol = symbols.value[0].split('@')[0].toUpperCase();
+
+    const options: RestMarketTypes.orderBookOptions = {
+      limit: limit.value,
+    };
 
     try {
       const binanceApiRes = await client.orderBook(formattedSymbol, options)
@@ -40,9 +40,9 @@ export function useOrderBook(symbols: Readonly<Ref<string[]>>, limit: Readonly<R
       console.error('binanceApi ERROR:', e)
     }
 
-    if (subscription && oldValue) subscription.unsubscribe()
+    if (subscription) subscription.unsubscribe()
 
-    const pair$ = subscribeForSymbols(value)
+    const pair$ = subscribeForSymbols(symbols.value)
 
     subscription = pair$.subscribe((msg) => {
       if (!isOrderItem(msg)) return

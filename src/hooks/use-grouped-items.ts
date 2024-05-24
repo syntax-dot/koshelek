@@ -1,5 +1,5 @@
 import {computed, Ref} from "vue";
-import {groupBy, last, mapValues, round, sum, toPairs} from "lodash";
+import {groupBy, last, mapValues, sum, toPairs} from "lodash";
 
 export function useGroupedItems(items: Readonly<Ref<[number, number][]>>, precision: Readonly<Ref<number | null>>) {
   return computed(() => {
@@ -9,7 +9,7 @@ export function useGroupedItems(items: Readonly<Ref<[number, number][]>>, precis
           ? (el) => (el[0] / precision.value) * precision.value
           : (el) => el[0]
       )
-      return toPairs(mapValues(groupedItems, (values) => round(sum(values.map(last)), 2)))
+      return toPairs(mapValues(groupedItems, (values) => sum(values.map(last))))
     }
   )
 }
