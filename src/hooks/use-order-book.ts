@@ -29,16 +29,23 @@ export function useOrderBook(symbols: Readonly<Ref<string[]>>) {
   watch(symbols, async (value, oldValue) => {
     const formattedSymbol = value[0].split('@')[0].toUpperCase();
 
-    try {
-      const binanceApiRes = await client.orderBook(formattedSymbol, options)
+    // try {
+    //   const binanceApiRes = await client.orderBook(formattedSymbol, options)
+    //
+    //   if (binanceApiRes.bids && binanceApiRes.asks) {
+    //     askOrders.value = binanceApiRes.asks.map(it => it.map(parseFloat) as Order)
+    //     bidOrders.value = binanceApiRes.bids.map(it => it.map(parseFloat) as Order)
+    //   }
+    // } catch (e) {
+    //   console.error('binanceApi ERROR:', e)
+    // }
 
-      if (binanceApiRes.bids && binanceApiRes.asks) {
-        askOrders.value = binanceApiRes.asks.map(it => it.map(parseFloat) as Order)
-        bidOrders.value = binanceApiRes.bids.map(it => it.map(parseFloat) as Order)
-      }
-    } catch (e) {
+    client.orderBook(formattedSymbol, options).then((binanceApiRes) => {
+      askOrders.value = binanceApiRes.asks.map(it => it.map(parseFloat) as Order)
+      bidOrders.value = binanceApiRes.bids.map(it => it.map(parseFloat) as Order)
+    }).catch((e) => {
       console.error('binanceApi ERROR:', e)
-    }
+    })
 
 
     if (subscription && oldValue) subscription.unsubscribe()
