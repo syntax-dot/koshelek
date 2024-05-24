@@ -7,13 +7,13 @@
         label="Items limit"
         :items="limitsOptions"
       />
-      <v-select
-        v-model="selectedPriceDifference"
-        variant="outlined"
-        clearable
-        label="Price difference"
-        :items="priceDifferenceOptions"
-      />
+      <!--      <v-select-->
+      <!--        v-model="selectedPriceDifference"-->
+      <!--        variant="outlined"-->
+      <!--        clearable-->
+      <!--        label="Price difference"-->
+      <!--        :items="priceDifferenceOptions"-->
+      <!--      />-->
       <!--   Информация по торговой паре выведена для удобства и тестирования, логи при смене не ведутся   -->
       <PairSelect
         v-model="selectedPair"
@@ -35,7 +35,7 @@ import {useDisplay} from "vuetify";
 
 const columns = ['Price', 'Quantity', 'Total']
 const limitsOptions = [100, 500, 1000]
-const priceDifferenceOptions = [1, 10, 100]
+// const priceDifferenceOptions = [1, 10, 100]
 
 const selectedLimit = ref(100)
 const selectedPriceDifference = ref<number | null>(null)
@@ -46,7 +46,7 @@ const {mobile} = useDisplay()
 const selectedPairValue = computed(() => {
   return [selectedPair.value.toLowerCase().concat('@depth')]
 })
-const computedColumns = computed(() => mobile.value ? 1 : 3)
+const computedColumns = computed(() => mobile.value ? 1 : 2)
 
 const orderBook = useOrderBook(selectedPairValue, selectedLimit)
 const askOrders = useGroupedItems(orderBook.askOrders, selectedPriceDifference)

@@ -13,6 +13,9 @@ function isOrderItem(arg: any): arg is OrderItem {
     && Array.isArray(arg.b)
 }
 
+function parseOrderItem(item: [string, string]) {
+  return item.map(parseFloat) as Order
+}
 
 export function useOrderBook(symbols: Readonly<Ref<string[]>>, limit: Readonly<Ref<number>>) {
   const askOrders = ref<Order[]>([])
@@ -37,9 +40,11 @@ export function useOrderBook(symbols: Readonly<Ref<string[]>>, limit: Readonly<R
         }
       })
 
-      if (binanceApiRes.bids && binanceApiRes.asks) {
-        askOrders.value = binanceApiRes.asks.map(it => it.map(parseFloat) as Order)
-        bidOrders.value = binanceApiRes.bids.map(it => it.map(parseFloat) as Order)
+      const {bids, asks} = binanceApiRes || {}
+
+      if (bids && asks) {
+        askOrders.value = asks.map(parseOrderItem)
+        bidOrders.value = bids.map(parseOrderItem)
       }
     } catch (e) {
       console.error('binanceApi ERROR:', e)
@@ -52,8 +57,8 @@ export function useOrderBook(symbols: Readonly<Ref<string[]>>, limit: Readonly<R
     subscription = pair$.subscribe((msg) => {
       if (!isOrderItem(msg)) return
 
-      const updateForAsks = msg.a.map(it => it.map(parseFloat) as Order)
-      const updateForBids = msg.b.map(it => it.map(parseFloat) as Order)
+      const updateForAsks = msg.a.map(parseOrderItem)
+      const updateForBids = msg.b.map(parseOrderItem)
       const mappedAsks = new Map([...askOrders.value, ...updateForAsks])
       const mappedBids = new Map([...bidOrders.value, ...updateForBids])
 
