@@ -29,7 +29,8 @@ export function useOrderBook(symbols: Readonly<Ref<string[]>>, limit: Readonly<R
     try {
       // TODO not working in hosting
       // const binanceApiRes = await client.orderBook(formattedSymbol, options)
-      const {data: binanceApiRes}: AxiosResponse<RestMarketTypes.orderBookResponse> = await client.get('depth', {
+
+      const {data: binanceApiRes}: AxiosResponse<RestMarketTypes.orderBookResponse> = await client.get('/depth', {
         params: {
           limit: limit.value,
           symbol: formattedSymbol

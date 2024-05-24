@@ -1,7 +1,7 @@
 import {createInjectable} from "../utils/composition/create-injectable";
 import Axios from "axios";
 
-const BASE_URL = 'https://api.binance.com/api/v3/';
+const BASE_URL = 'https://api.binance.com/api/v3';
 
 export const binanceApiInjectable = createInjectable(() => {
   // TODO not working in hosting
