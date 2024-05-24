@@ -17,7 +17,7 @@ const options: RestMarketTypes.orderBookOptions = {
 };
 
 
-export function useOrderBook(symbols: Readonly<Ref<string[]>>) {
+export function useOrderBook(symbols: Readonly<Ref<string[]>>, limit: Readonly<Ref<number>>) {
   const askOrders = ref<Order[]>([])
   const bidOrders = ref<Order[]>([])
 
@@ -29,24 +29,16 @@ export function useOrderBook(symbols: Readonly<Ref<string[]>>) {
   watch(symbols, async (value, oldValue) => {
     const formattedSymbol = value[0].split('@')[0].toUpperCase();
 
-    // try {
-    //   const binanceApiRes = await client.orderBook(formattedSymbol, options)
-    //
-    //   if (binanceApiRes.bids && binanceApiRes.asks) {
-    //     askOrders.value = binanceApiRes.asks.map(it => it.map(parseFloat) as Order)
-    //     bidOrders.value = binanceApiRes.bids.map(it => it.map(parseFloat) as Order)
-    //   }
-    // } catch (e) {
-    //   console.error('binanceApi ERROR:', e)
-    // }
+    try {
+      const binanceApiRes = await client.orderBook(formattedSymbol, options)
 
-    client.orderBook(formattedSymbol, options).then((binanceApiRes) => {
-      askOrders.value = binanceApiRes.asks.map(it => it.map(parseFloat) as Order)
-      bidOrders.value = binanceApiRes.bids.map(it => it.map(parseFloat) as Order)
-    }).catch((e) => {
+      if (binanceApiRes.bids && binanceApiRes.asks) {
+        askOrders.value = binanceApiRes.asks.map(it => it.map(parseFloat) as Order)
+        bidOrders.value = binanceApiRes.bids.map(it => it.map(parseFloat) as Order)
+      }
+    } catch (e) {
       console.error('binanceApi ERROR:', e)
-    })
-
+    }
 
     if (subscription && oldValue) subscription.unsubscribe()
 
@@ -55,8 +47,13 @@ export function useOrderBook(symbols: Readonly<Ref<string[]>>) {
     subscription = pair$.subscribe((msg) => {
       if (!isOrderItem(msg)) return
 
-      askOrders.value = msg.a.map(it => it.map(parseFloat) as Order)
-      bidOrders.value = msg.b.map(it => it.map(parseFloat) as Order)
+      const updateForAsks = msg.a.map(it => it.map(parseFloat) as Order)
+      const updateForBids = msg.b.map(it => it.map(parseFloat) as Order)
+      const mappedAsks = new Map([...askOrders.value, ...updateForAsks])
+      const mappedBids = new Map([...bidOrders.value, ...updateForBids])
+
+      askOrders.value = Array.from(mappedAsks).slice(0, limit.value).filter(it => it[1] !== 0)
+      bidOrders.value = Array.from(mappedBids).slice(0, limit.value).filter(it => it[1] !== 0)
     })
 
   }, {immediate: true})

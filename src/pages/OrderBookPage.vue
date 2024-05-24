@@ -48,7 +48,7 @@ const selectedPairValue = computed(() => {
 })
 const computedColumns = computed(() => mobile.value ? 1 : 3)
 
-const orderBook = useOrderBook(selectedPairValue)
+const orderBook = useOrderBook(selectedPairValue, selectedLimit)
 const askOrders = useGroupedItems(orderBook.askOrders, selectedPriceDifference)
 const bidOrders = useGroupedItems(orderBook.bidOrders, selectedPriceDifference)
 </script>
